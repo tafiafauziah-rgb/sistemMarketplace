@@ -130,7 +130,7 @@ def menu_admin(username):
         pilihan = input("Pilih menu: ")
 
         if pilihan == '1':
-            admin_dashboard()
+            beranda_admin()
         elif pilihan == '2':
             manajemen_pengguna()
         elif pilihan == '3':
@@ -145,28 +145,28 @@ def menu_admin(username):
             print("Pilihan tidak valid!")
             input("Tekan Enter...")
 
-# ------------------------ BERANDA ADMIN ------------------------
-def admin_dashboard():
-    os.system('cls')
-    print("===== BERANDA ADMIN =====")
+# ------------------------ BERANDA ADMIN --  ADMIN ------------------------
+# def beranda_admin():
+#     os.system('cls')
+#     print("===== BERANDA ADMIN =====")
 
-    if not os.path.exists('product.csv'):
-        print("Belum ada data produk.")
-        input("\nTekan Enter untuk kembali...")
-        return
+#     if not os.path.exists('product.csv'):
+#         print("Belum ada data produk.")
+#         input("\nTekan Enter untuk kembali...")
+#         return
 
-    df = pd.read_csv('product.csv') #utk membaca file csv
-    total_produk = len(df) #menghitung jmlh baris pada dataframe
-    total_harga = df['harga'].sum() #.sum itu buat ngitung jumlah semua harga
-    total_terjual = df['terjual'].sum()  # .sum buat ngitung semua baris di kolon terjual
+#     df = pd.read_csv('product.csv') #utk membaca file csv
+#     total_produk = len(df) #menghitung jmlh baris pada dataframe
+#     total_harga = df['harga'].sum() #.sum itu buat ngitung jumlah semua harga
+#     total_terjual = df['terjual'].sum()  # .sum buat ngitung semua baris di kolon terjual
 
-    print(f"Jumlah Produk: {total_produk}")
-    print(f"Total Harga Semua Produk: Rp {total_harga:,}")
-    print(f"Total Produk Terjual: {total_terjual}")
+#     print(f"Jumlah Produk: {total_produk}")
+#     print(f"Total Harga Semua Produk: Rp {total_harga:,}")
+#     print(f"Total Produk Terjual: {total_terjual}")
 
-    input("\nTekan Enter untuk kembali...")
+#     input("\nTekan Enter untuk kembali...")
 
-# ------------------------ MANAJEMEN PENGGUNA ------------------------
+# ------------------------ MANAJEMEN PENGGUNA -- ADMIN------------------------
 def manajemen_pengguna():
     os.system('cls')
     print("===== DAFTAR SEMUA USER =====")
@@ -181,7 +181,7 @@ def manajemen_pengguna():
 
     input("\nTekan Enter...")
 
-# ------------------------ MANAJEMEN PRODUK ------------------------
+# ------------------------ MANAJEMEN PRODUK -- ADMIN ------------------------
 def manajemen_produk():
     while True:
         os.system('cls')
@@ -208,6 +208,7 @@ def manajemen_produk():
             print("Pilihan tidak valid!")
             input("Enter...")
 
+# ------------------------ LIHAT PRODUK -- OPERATOR DAN ADMIN -- MANAJEMEN PRODUK ------------------------
 def lihat_produk():
     os.system('cls')
 
@@ -230,6 +231,7 @@ def lihat_produk():
             input("Enter untuk kembali")
             return
 
+# ------------------------ TAMBAH PRODUK -- ADMIN -- MANAJEMEN PRODUK -----------------------
 
 def tambah_produk():
     os.system('cls')
@@ -262,6 +264,7 @@ def tambah_produk():
         input("\n Tekan Enter!")
         return
 
+# ------------------------ UBAH DATA -- ADMIN -- MANAJEMEN PRODUK -----------------------
 
 def ubah_produk():
     os.system('cls')
@@ -311,6 +314,7 @@ def ubah_produk():
     print("Produk berhasil diubah!")
     input("\nTekan Enter...")
 
+# ------------------------ HAPUS DATA -- ADMIN -- MANAJEMEN PRODUK -----------------------
 def hapus_produk():
     os.system('cls')
     if not os.path.exists('product.csv'):
@@ -339,21 +343,11 @@ def hapus_produk():
     print("Produk berhasil dihapus!")
     input("\nTekan Enter...")
 
-# ------------------------ MANAJEMEN TRANSAKSI ------------------------
-def manajemen_transaksi():
-    os.system('cls')
-    print("===== SEMUA TRANSAKSI =====")
 
-    if not os.path.exists('transaksi.csv'):
-        print("Belum ada transaksi.")
-        input("\nTekan Enter...")
-        return
+# ------------------------ MANAJEMEN PRODUK -- ADMIN ------------------------
+# ISI
 
-    df = pd.read_csv('transaksi.csv')
-    print(tabulate(df, headers='keys', tablefmt='grid'))
-    input("\nTekan Enter...")
-    
-# ------------------------ LAPORAN ------------------------
+# ------------------------ LAPORAN -- ADMIN ------------------------
 def laporan():
     os.system('cls')
     print("===== LAPORAN TRANSAKSI =====")
@@ -380,6 +374,22 @@ def laporan():
 
     input("\nTekan Enter...")
 
+# ------------------------ MANAJEMEN TRANSAKSI ------------------------
+def manajemen_transaksi():
+    os.system('cls')
+    print("===== SEMUA TRANSAKSI =====")
+
+    if not os.path.exists('transaksi.csv'):
+        print("Belum ada transaksi.")
+        input("\nTekan Enter...")
+        return
+
+    df = pd.read_csv('transaksi.csv')
+    print(tabulate(df, headers='keys', tablefmt='grid'))
+    input("\nTekan Enter...")
+    
+
+
 # ------------------------ MENU USER ------------------------
 def menu_user(username):
     while True:
@@ -389,17 +399,108 @@ def menu_user(username):
         print("2. Searching")
         print("3. Keranjang Belanja")
         print("4. Pembayaran")
-        2
+        print("5. logout")
 
         p = input("Pilih menu: ")
 
         if p == '1':
             lihat_produk()
         elif p == '2':   
+            cariProduct()
+        elif p == '3':   
+            # keranjang()
             return
+        
+        elif p == '4':   
+            # metodePembayaran()
+            return
+        elif p == '5':   
+            return main_menu()
+        
         else:
             print("Pilihan tidak valid!")
             input("Enter...")
+
+    
+def cariProduct():
+    os.system('cls')
+    print("===== CARI Produk =====")
+    while True:
+        data_product = 'product.csv'
+        namaColumn = 'id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'
+        if not os.path.exists(data_product):
+            print("Belum ada pengguna.")
+            df = pd.DataFrame(columns=namaColumn)
+            df.to_csv(data_product)
+            print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
+            input("\nTekan Enter...")
+            return
+        else:
+            df = pd.read_csv(data_product)
+            # df = pd.DataFrame(columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'])
+            print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
+
+        try:
+            id = int(input("\n Cari product berdasarkan id: "))
+        except:
+            print("Masukan id dengan angka")
+            input("Tekan Enter untuk kembali...")
+            return
+        
+        # mencari value var id dari data =_product
+        filter =  df[df['id'] == id]
+        
+        if not filter.empty:
+            os.system('cls')
+            print("Data ditemukan \n")
+            print(tabulate(filter, headers='keys', tablefmt='fancy_grid', showindex=False))
+            input("Tekan Enter untuk kembaLi...")
+            return
+
+        else:
+            print("\nData tidak ditemukan")
+            input("Tekan Enter untuk kembaLi...")
+            return
+
+# def keranjang():
+
+
+# def metodePembayaran():
+
+
+
+
+#  SAMA DENGAN YG ATAS
+# def hapus_produk():
+#     os.system('cls')
+#     if not os.path.exists('product.csv'):
+#         print("Belum ada produk.")
+#         input("\nTekan Enter...")
+#         return
+
+#     df = pd.read_csv('product.csv')
+#     print(tabulate(df, headers='keys', tablefmt='grid'))
+
+#     try:
+#         id_p = int(input("\nID produk yang ingin dihapus: "))
+#     except ValueError:
+#         print("ID harus berupa angka!")
+#         input("Enter...")
+#         return
+
+#     if id_p not in df['id'].values:
+#         print("ID tidak ditemukan!")
+#         input("Enter...")
+#         return
+
+#     df = df[df['id'] != id_p]
+#     df.to_csv('product.csv', index=False)
+
+#     print("Produk berhasil dihapus!")
+#     input("\nTekan Enter...")
+
+
+
 
 # ------------------------ MENU UTAMA ------------------------
 def main_menu():
