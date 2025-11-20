@@ -50,8 +50,8 @@ def register():
             regadmin() #manggil fungsi sbg admin
             return  # kembali ke menu utama
         elif p == '2':
-            username = input("\nMasukkan username: ").strip()
-            password = input("Masukkan password: ").strip()
+            username = input("\nMasukkan username: ").strip().lower() #.lower biar semua huruf jd kecil
+            password = input("Masukkan password: ").strip().lower()
 
             if not username or not password:
                 print("\nUsername dan password tidak boleh kosong!")
@@ -91,8 +91,8 @@ def register():
 def login():
     os.system('cls')
     print("============================[ LOGIN ]============================")
-    username = input("Masukkan username: ").strip()
-    password = input("Masukkan password: ").strip()
+    username = input("Masukkan username: ").strip().lower()
+    password = input("Masukkan password: ").strip().lower()
 
     if not os.path.exists('user.csv'): #cek apakah file csv uda ada apa blm
         print("\nBelum ada akun! Silakan daftar terlebih dahulu.")
@@ -120,26 +120,23 @@ def menu_admin(username):
     while True:
         os.system('cls')
         print(f"=== MENU ADMIN ===\nHalo Admin {username}")
-        print("1. Beranda Admin")
-        print("2. Manajemen Pengguna")
-        print("3. Manajemen Produk")
-        print("4. Manajemen Transaksi")
-        print("5. Laporan")
-        print("6. Logout")
+        print("1. Manajemen Pengguna")
+        print("2. Manajemen Produk")
+        print("3. Manajemen Transaksi")
+        print("4. Laporan")
+        print("5. Logout")
 
         pilihan = input("Pilih menu: ")
 
         if pilihan == '1':
-            beranda_admin()
-        elif pilihan == '2':
             manajemen_pengguna()
-        elif pilihan == '3':
+        elif pilihan == '2':
             manajemen_produk()
-        elif pilihan == '4':
+        elif pilihan == '3':
             manajemen_transaksi()
-        elif pilihan == '5':
+        elif pilihan == '4':
             laporan()
-        elif pilihan == '6':
+        elif pilihan == '5':
             return
         else:
             print("Pilihan tidak valid!")
@@ -166,6 +163,8 @@ def menu_admin(username):
 
 #     input("\nTekan Enter untuk kembali...")
 
+
+
 # ------------------------ MANAJEMEN PENGGUNA -- ADMIN------------------------
 def manajemen_pengguna():
     os.system('cls')
@@ -175,11 +174,83 @@ def manajemen_pengguna():
         print("Belum ada pengguna.")
         input("\nTekan Enter...")
         return
+    
+    while True: 
+        os.system('cls')
+        print(f"=== MANAJEMEN Pengguna ===")
+        print("1. Lihat Pengguna")
+        print("2. Delete Pengguna")
+        print("3. Metode Transaksi")
+        print("4. logout")
 
-    df = pd.read_csv('user.csv')
-    print(tabulate(df, headers='keys', tablefmt='grid'))
+        p = input("Pilih menu: ")
+        if p == '1':
+            lihat_pengguna()
+        elif p == '2':   
+            hapus_pengguna()
+        elif p == '3':   
+            # metodePembayaran()
+            return
+        elif p == '4':   
+            return main_menu()
+        else:
+            print("Pilihan tidak valid!")
+            input("Enter...")
 
+
+    # ------------------------ HAPUS DATA -- ADMIN -- MANAJEMEN PRODUK -----------------------
+def hapus_pengguna():
+    os.system('cls')
+    file_user = 'user.csv'
+    if not os.path.exists(file_user):
+        print("Belum ada produk.")
+        input("\nTekan Enter...")
+        return
+
+    df = pd.read_csv(file_user)
+    print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
+
+    try:
+        user = input("\nUsername pengguna yang ingin dihapus : ")
+    except ValueError:
+        print("user tidak boleh kosong")
+        input("Enter...")
+        return
+
+    if user not in df['username'].values:
+        print("ID tidak ditemukan!")
+        input("Enter...")
+        return
+
+    df = df[df['username'] != user] 
+    df.to_csv(file_user, index=False) #menyimpan perubahan ke file csv tanpa menyertakan index
+
+    print("Produk berhasil dihapus!")
     input("\nTekan Enter...")
+    return manajemen_pengguna() 
+
+def lihat_pengguna():
+    os.system('cls')
+
+    while True:
+        file_product = 'user.csv'
+        namaColumn = 'user', 'password', 'role'
+        if not os.path.exists(file_product):
+            print("Belum ada produk.")
+            df = pd.DataFrame(columns=namaColumn) #buat buka dataframe kolomnya dr variabl kolum
+            df.to_csv(file_product)
+            print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
+            input("Enter untuk kembali...")
+            return 
+
+        
+        else:
+            df = pd.read_csv(file_product)
+            # df = pd.DataFrame(columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'])
+            print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
+            input("Enter untuk kembali...")
+            return
+
 
 # ------------------------ MANAJEMEN PRODUK -- ADMIN ------------------------
 def manajemen_produk():
@@ -217,10 +288,10 @@ def lihat_produk():
         namaColumn = 'id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'
         if not os.path.exists(file_product):
             print("Belum ada produk.")
-            df = pd.DataFrame(columns=namaColumn)
+            df = pd.DataFrame(columns=namaColumn) #buat buka dataframe kolomnya dr variabl kolum
             df.to_csv(file_product)
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
-            input("Enter untuk kembali")
+            input("Enter untuk kembali...")
             return
 
         
@@ -228,9 +299,8 @@ def lihat_produk():
             df = pd.read_csv(file_product)
             # df = pd.DataFrame(columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'])
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
-            input("Enter untuk kembali")
+            input("Enter untuk kembali...")
             return
-
 # ------------------------ TAMBAH PRODUK -- ADMIN -- MANAJEMEN PRODUK -----------------------
 
 def tambah_produk():
@@ -245,14 +315,14 @@ def tambah_produk():
     # baca file
     df = pd.read_csv(file_product)
 # tentukan id baru
-    id_new = df['id'].max() + 1 if not df.empty else 1
+    id_new = df['id'].max() + 1 if not df.empty else 1 #klo df ga kosong id baru itu id max + 1 klo kosong id nya 1
 # input data baru
     nama = input("Nama produk: ").strip().title()
     kategori = input("Kategori: ").strip().title()
     try:
         harga = int(input("Harga: "))
         stok = int(input("Stok: "))
-        subsidi = input("Subsidi (ya/tidak): ").strip().title()
+        subsidi = input("Subsidi (ya/tidak): ").strip().title() #strip buat ngilangin spasi title buat bikin huruf awal jd kapital
 
         with open('product.csv', 'a', newline='') as f:
             csv.writer(f).writerow([id_new, nama, kategori, harga, stok, subsidi])
@@ -261,58 +331,84 @@ def tambah_produk():
         input("\nTekan Enter...")
     except ValueError:
         print("Harga dan stok harus berupa angka!")
-        input("\n Tekan Enter!")
-        return
+        input("\n Tekan Enter untuk kembali...")
+        return 
 
 # ------------------------ UBAH DATA -- ADMIN -- MANAJEMEN PRODUK -----------------------
 
 def ubah_produk():
     os.system('cls')
-    if not os.path.exists('product.csv'):
+    print("===== UBAH PRODUK =====")
+    file_product = 'product.csv'
+
+    if not os.path.exists(file_product):
         print("Belum ada produk.")
         input("\nTekan Enter...")
         return
 
-    df = pd.read_csv('product.csv')
-    print(tabulate(df, headers='keys', tablefmt='grid'))
+    df = pd.read_csv(file_product)
+    print("Daftar Produk:")
+    print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
 
     try:
+        df = pd.read_csv(file_product)
         id_p = int(input("\nMasukkan ID produk yang ingin diubah: "))
     except ValueError:
         print("ID harus berupa angka!")
         input("Enter...")
         return
 
-    if id_p not in df['id'].values:
+    if id_p not in df['id'].values: #ngecek id_p itu ada di variabel df di kolom id
         print("ID tidak ditemukan!")
         input("Enter...")
         return
+    
+    # ambil data based id
+    data_produk = df[df['id'] == id_p] #
+    # ambil nilai idx 0 dri data_produk
+    data = data_produk.iloc[0]
 
-    nama = input("Nama baru: ").strip()
-    kategori = input("Kategori baru: ").strip()
+    
+    # menampilkan data produk yg akan diubah
+    data = data_produk[data_produk['id'] == id_p]
+
+    if not data_produk.empty:
+        os.system('cls')
+        print("Data produk yang akan diubah:")
+        print(tabulate(data, headers='keys', tablefmt='fancy_grid', showindex=False))
+
+        
     try:
+        nama = input("/nNama baru: ").strip().title()
+        kategori = input("Kategori baru: ").strip().title()
         harga = int(input("Harga: "))
         stok = int(input("Stok: "))
-        subsidi = input("Subsidi (ya/tidak): ").strip().lower()
+        subsidi = input("Subsidi (ya/tidak): ").strip().title()
 
-        with open('product.csv', 'a', newline='') as f:
-            csv.writer(f).writerow([id_new, nama, kategori, harga, stok, subsidi])
-    
+        if nama :
+            df.loc[df['id'] == id_p, 'NamaProduk'] = nama
+        if kategori :   
+            df.loc[df['id'] == id_p, 'Kategori'] = kategori                 
+        if harga :
+            df.loc[df['id'] == id_p, 'Harga'] = harga
+        if stok :
+            df.loc[df['id'] == id_p, 'Stok'] = stok
+
+        # with open('product.csv', 'a', newline='') as f:
+        #     csv.writer(f).writerow([id_p, nama, kategori, harga, stok, subsidi]).
         print("Produk berhasil ditambahkan!")
         input("\nTekan Enter...")
     except ValueError:
         print("Harga dan stok harus berupa angka!")
-        input("\n Tekan Enter!")
+        input("\n Tekan Enter...")
         return
     
-    subsidi = input("Subsidi (ya/tidak): ").strip().lower()
 
-    df.loc[df['id'] == id_p, ['nama','kategori','harga','stok','subsidi']] = \
-        [nama, kategori, harga, stok, subsidi]
 
-    df.to_csv('product.csv', index=False)
+    df.to_csv(file_product, index=False)
     print("Produk berhasil diubah!")
     input("\nTekan Enter...")
+    return
 
 # ------------------------ HAPUS DATA -- ADMIN -- MANAJEMEN PRODUK -----------------------
 def hapus_produk():
@@ -342,6 +438,10 @@ def hapus_produk():
 
     print("Produk berhasil dihapus!")
     input("\nTekan Enter...")
+    return manajemen_produk()
+
+
+
 
 
 # ------------------------ MANAJEMEN PRODUK -- ADMIN ------------------------
