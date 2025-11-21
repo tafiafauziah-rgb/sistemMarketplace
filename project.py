@@ -289,6 +289,7 @@ def lihat_produk():
         if not os.path.exists(file_product):
             print("Belum ada produk.")
             df = pd.DataFrame(columns=namaColumn) #buat buka dataframe kolomnya dr variabl kolum
+            df = df.reset_index(drop=True)
             df.to_csv(file_product)
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
             input("Enter untuk kembali...")
@@ -412,33 +413,36 @@ def ubah_produk():
 
 # ------------------------ HAPUS DATA -- ADMIN -- MANAJEMEN PRODUK -----------------------
 def hapus_produk():
-    os.system('cls')
-    if not os.path.exists('product.csv'):
-        print("Belum ada produk.")
+    while True:
+        os.system('cls')
+        file_produk = 'product.csv'
+        if not os.path.exists(file_produk):
+            print("Belum ada produk.")
+            input("\nTekan Enter...")
+            return
+
+        df = pd.read_csv(file_produk)
+        print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
+        
+        try:
+            id_p = int(input("\nID produk yang ingin dihapus: "))
+        except ValueError:
+            print("ID harus berupa angka!")
+            input("Enter...")
+            return
+
+        if id_p not in df['id'].values:
+            print("ID tidak ditemukan!")
+            input("Enter...")
+            return
+
+        df = df[df['id'] != id_p]
+        df = df.reset_index(drop=True)
+        df.to_csv(file_produk, index=False)
+
+        print("Produk berhasil dihapus!")
         input("\nTekan Enter...")
-        return
-
-    df = pd.read_csv('product.csv')
-    print(tabulate(df, headers='keys', tablefmt='grid'))
-
-    try:
-        id_p = int(input("\nID produk yang ingin dihapus: "))
-    except ValueError:
-        print("ID harus berupa angka!")
-        input("Enter...")
-        return
-
-    if id_p not in df['id'].values:
-        print("ID tidak ditemukan!")
-        input("Enter...")
-        return
-
-    df = df[df['id'] != id_p]
-    df.to_csv('product.csv', index=False)
-
-    print("Produk berhasil dihapus!")
-    input("\nTekan Enter...")
-    return manajemen_produk()
+        return manajemen_produk()
 
 
 
@@ -498,7 +502,7 @@ def menu_user(username):
         print("1. Lihat Produk")
         print("2. Searching")
         print("3. Keranjang Belanja")
-        print("4. Pembayaran")
+        print("4. Metode Pembayaran")
         print("5. logout")
 
         p = input("Pilih menu: ")
@@ -563,41 +567,129 @@ def cariProduct():
             return
 
 # def keranjang():
+# ------------------------ TAMBAH BARANG KE KERANJANG ------------------------
+def tambah_ke_keranjang(username):
+    os.system('cls')
+    print("===== TAMBAH KE KERANJANG =====")
+    
+    # Cek apakah produk tersedia
+    if not os.path.exists('product.csv'):
+        print("Belum ada produk! Silakan tambahkan produk terlebih dahulu (oleh admin).")
+        input("Tekan Enter untuk kembali...")
+        return
 
+    # Tampilkan daftar produk
+    df_produk = pd.read_csv('product.csv')
+    print(tabulate(df_produk[['id', 'NamaProduk', 'Harga', 'Stok']], headers='keys', tablefmt='fancy_grid', showindex=False))
+
+    try:
+        id_produk = int(input("\nMasukkan ID produk yang ingin ditambahkan: "))
+    except ValueError:
+        print("ID harus berupa angka!")
+        input("Tekan Enter...")
+        return
+
+    # Cek apakah ID ada
+    if id_produk not in df_produk['id'].values:
+        print("ID produk tidak ditemukan!")
+        input("Tekan Enter...")
+        return
+
+    produk = df_produk[df_produk['id'] == id_produk].iloc[0]
+    if produk['Stok'] <= 0:
+        print("Stok produk ini habis!")
+        input("Tekan Enter...")
+        return
+
+    # Input jumlah
+    try:
+        jumlah = int(input(f"Jumlah (Stok tersedia: {produk['Stok']}): "))
+        if jumlah <= 0:
+            print("Jumlah minimal 1!")
+            input("Tekan Enter...")
+            return
+        if jumlah > produk['Stok']:
+            print("Jumlah melebihi stok tersedia!")
+            input("Tekan Enter...")
+            return
+    except ValueError:
+        print("Jumlah harus berupa angka!")
+        input("Tekan Enter...")
+        return
+
+    # Pastikan file keranjang ada
+    keranjang_file = 'keranjang.csv'
+    if not os.path.exists(keranjang_file):
+        with open(keranjang_file, 'w', newline='') as f:
+            csv.writer(f).writerow(['username', 'id', 'NamaProduk', 'Harga', 'Jumlah'])
+
+    # Baca keranjang
+    df_keranjang = pd.read_csv(keranjang_file)
+    
+    # Cek apakah produk sudah ada di keranjang
+    existing = df_keranjang[
+        (df_keranjang['username'] == username) & 
+        (df_keranjang['id'] == id_produk)
+    ]
+
+    if not existing.empty:
+        # Update jumlah
+        idx = existing.index[0]
+        df_keranjang.at[idx, 'Jumlah'] += jumlah
+        df_keranjang.to_csv(keranjang_file, index=False)
+        print(f"Jumlah produk '{produk['NamaProduk']}' diperbarui di keranjang!")
+    else:
+        # Tambah baru
+        with open(keranjang_file, 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([username, id_produk, produk['NamaProduk'], int(produk['Harga']), jumlah])
+        print(f"Produk '{produk['NamaProduk']}' berhasil ditambahkan ke keranjang!")
+
+    input("Tekan Enter untuk kembali...")
+
+
+# ------------------------ HAPUS BARANG DARI KERANJANG ------------------------
+def hapus_dari_keranjang(username):
+    os.system('cls')
+    print("===== HAPUS DARI KERANJANG =====")
+    
+    keranjang_file = 'keranjang.csv'
+    if not os.path.exists(keranjang_file):
+        print("Keranjang Anda kosong.")
+        input("Tekan Enter...")
+        return
+
+    df = pd.read_csv(keranjang_file)
+    user_cart = df[df['username'] == username]
+
+    if user_cart.empty:
+        print("Keranjang Anda kosong.")
+        input("Tekan Enter...")
+        return
+
+    print("Isi Keranjang Anda:")
+    print(tabulate(user_cart[['id', 'NamaProduk', 'Jumlah']], headers='keys', tablefmt='fancy_grid', showindex=False))
+
+    try:
+        id_hapus = int(input("\nMasukkan ID produk yang ingin dihapus: "))
+    except ValueError:
+        print("ID harus berupa angka!")
+        input("Tekan Enter...")
+        return
+
+    if id_hapus not in user_cart['id'].values:
+        print("Produk tidak ditemukan di keranjang Anda!")
+        input("Tekan Enter...")
+        return
+
+    # Hapus baris yang cocok
+    df = df[~((df['username'] == username) & (df['id'] == id_hapus))]
+    df.to_csv(keranjang_file, index=False)
+    print("Produk berhasil dihapus dari keranjang!")
+    input("Tekan Enter...")
 
 # def metodePembayaran():
 
-
-
-
-#  SAMA DENGAN YG ATAS
-# def hapus_produk():
-#     os.system('cls')
-#     if not os.path.exists('product.csv'):
-#         print("Belum ada produk.")
-#         input("\nTekan Enter...")
-#         return
-
-#     df = pd.read_csv('product.csv')
-#     print(tabulate(df, headers='keys', tablefmt='grid'))
-
-#     try:
-#         id_p = int(input("\nID produk yang ingin dihapus: "))
-#     except ValueError:
-#         print("ID harus berupa angka!")
-#         input("Enter...")
-#         return
-
-#     if id_p not in df['id'].values:
-#         print("ID tidak ditemukan!")
-#         input("Enter...")
-#         return
-
-#     df = df[df['id'] != id_p]
-#     df.to_csv('product.csv', index=False)
-
-#     print("Produk berhasil dihapus!")
-#     input("\nTekan Enter...")
 
 
 
