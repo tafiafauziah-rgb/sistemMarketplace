@@ -567,7 +567,6 @@ def cariProduct():
             return
 
 # def keranjang():
-# ------------------------ TAMBAH BARANG KE KERANJANG ------------------------
 def tambah_ke_keranjang(username):
     os.system('cls')
     print("===== TAMBAH KE KERANJANG =====")
@@ -687,7 +686,6 @@ def hapus_dari_keranjang(username):
     df.to_csv(keranjang_file, index=False)
     print("Produk berhasil dihapus dari keranjang!")
     input("Tekan Enter...")
-
 # def metodePembayaran():
 
 
