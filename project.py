@@ -105,8 +105,8 @@ def menu_admin(username):
             manajemen_pengguna()
         elif pilihan == '2':
             manajemen_produk()
-        elif pilihan == '3':
-            manajemen_transaksi()
+        # elif pilihan == '3':
+            # manajemen_transaksi()
         elif pilihan == '4':
             laporan()
         elif pilihan == '5':
@@ -452,9 +452,10 @@ def menu_user(username):
         print(f"=== MENU USER ===\nHalo {username}")
         print("1. Lihat Produk")
         print("2. Searching")
-        print("3. Keranjang Belanja")
-        print("4. Metode Pembayaran")
-        print("5. logout")
+        print("3. Tambah produk ke keranjang")
+        print("4. Hapus produk dari keranjang ")
+        print("5. Metode Pembayaran")
+        print("6. logout")
 
         p = input("Pilih menu: ")
 
@@ -465,8 +466,10 @@ def menu_user(username):
         elif p == '3':   
             tambah_ke_keranjang(username)
         elif p == '4':   
-            metode_pembayaran(username)
+            hapus_dari_keranjang(username)
         elif p == '5':   
+            metode_pembayaran(username)
+        elif p == '6':   
             return main_menu()
         else:
             print("Pilihan tidak valid!")
@@ -600,7 +603,7 @@ def tambah_ke_keranjang(username):
         elif pilih == 'y':
             return tambah_ke_keranjang(username)
         elif pilih != 'y' or pilih != 'n':
-            print("MASUKKAN PILIHAN YG ADA DI MENU YA KAK.")
+            print("Pilih menu Metode Bayar (5) untuk melakukan pembayaran.")
         input("Tekan Enter untuk kembali...")
         return
         # return metode_pembayaran(username)
@@ -626,23 +629,48 @@ def hapus_dari_keranjang(username):
             break
 
         print("Isi Keranjang Anda:")
-        print(tabulate(user_cart[['id', 'NamaProduk', 'Jumlah']], headers='keys', tablefmt='fancy_grid', showindex=False))
+        print(tabulate(user_cart[['NamaProduk', 'Jumlah','hargaTotal' ]], headers='keys', tablefmt='fancy_grid', showindex=False))
 
         try:
-            id_hapus = int(input("\nMasukkan ID produk yang ingin dihapus: "))
+            nama_hapus = input("\nMasukkan Nama produk yang ingin dihapus: ").title()
         except ValueError:
             print("ID harus berupa angka!")
             input("Tekan Enter...")
             break
 
-        if id_hapus not in user_cart['id'].values:
+        if nama_hapus not in user_cart['NamaProduk'].values:
             print("Produk tidak ditemukan di keranjang Anda!")
             input("Tekan Enter...")
             break
 
         # Hapus baris yang cocok
-        df = df[~((df['username'] == username) & (df['id'] == id_hapus))]
-        df.to_csv(keranjang_file, index=False)
+        df = df.astype(str) #cari perbedaan astype dan dstype
+        hasil = df[
+            df['NamaProduk'].str.contains(nama_hapus, case=False)] #.str.contains = untuk memeriksa apakah ada suatu str yg mengandungg kata tertentu
+# tampilkan hasil pencarian
+        if not hasil.empty:
+            os.system('cls')
+            print(tabulate(hasil[['NamaProduk', 'Jumlah','hargaTotal']], headers='keys', tablefmt='fancy_grid', showindex=False))
+        try:
+            pilih = input("\n Yakin ingin mengahapus? y/n: ").lower()
+            if pilih == 'y':
+                hasil = hasil[hasil['NamaProduk'].astype(str) != nama_hapus]
+                hasil.reset_index(drop=True, inplace=True)
+                hasil.to_csv(keranjang_file, index=False)
+                print("Pelanggan berhasil dihapus!")
+                input("Enter untuk kembali...")
+                return
+            
+
+            elif pilih == 'n':
+                print('Produk batal dihapus')
+                return
+            else:
+                print("Masukkan huruf yang sesuai dengan pilihan yang ada")
+                return
+        except ValueError:
+            print("ERROR DI BAGIAN HAPUS DATA")
+        
         print("Produk berhasil dihapus dari keranjang!")
         break 
         # input("Tekan Enter...")
@@ -695,10 +723,12 @@ def pembayaran_transfer(username):
     print("\nKeranjang Anda:")
     print(tabulate(df_user[['NamaProduk', 'Jumlah', 'Harga', 'hargaTotal']],
             headers='keys',tablefmt='fancy_grid', showindex=False))
+    
+    df_user.to_csv(keranjang_file, index=False)
 
     konfirmasi = input("\nBayar semua produk ini? (y/n): ").strip().lower()
     if  konfirmasi == 'n':
-        pembayaran_transfer(username)
+        metode_pembayaran(username)
         return
     elif konfirmasi != 'y':
         print("MASUKKAN PILIHAN YG ADA DI MENU YA KAK.")
