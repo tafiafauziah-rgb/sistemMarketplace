@@ -23,5 +23,5 @@ id,NamaProduk,Kategori,Harga,Stok,Subsidi
 22,Organik,Pupuk,80000,80,Ya
 23,Kandang,Pupuk,20000,90,Ya
 24,Organik,Pupuk,80000,80,Ya
-25,Kandang,Pupuk,20000,80,Ya
-26,Organik,Pupuk,80000,0,Ya
+25,Kolam,Pupuk,20000,22,Ya
+26,Kris,Pupuk,20000,22,Ya

@@ -171,7 +171,7 @@ def hapus_pengguna():
             input("Enter...")
             break
 
-        df = df[df['username'] != user] 
+        df = df[df['username'] != user] #ngefilter apa di variabel df kolom username ini ada user apa ngga, klo ada dihapus
         df.to_csv(file_user, index=False) #menyimpan perubahan ke file csv tanpa menyertakan index
 
         print("Produk berhasil dihapus!")
@@ -271,21 +271,15 @@ def tambah_produk():
             with open(file_product, 'r', newline='') as f:
                 reader = csv.reader(f)
                 f = list(reader)
-            if len(f) > 1:
-                    id_terakhir = int(f[-1][0])
-                    id_new = id_terakhir + 1
+            if len(f) > 1: #ngecek panjang item di variabel f
+                    id_terakhir = int(f[-1][0]) #-1 baris paling akhir tapi ngambil dr kolom ke 0 atau pertama
+                    id_new = id_terakhir + 1 #ditambah di indeks akhir
             else:
-                id_new = 1
+                id_new = 1 
 
         except ValueError:
             print("File kosong, memulai dari ID 1.")
                 
-        # baca file
-
-# tentukan id baru
-        # id_new = df['id'].dtype(int)
-        # id_new = df['id'].max() + 1 if not /df.empty else 1 #klo df ga kosong id baru itu id max + 1 klo kosong id nya 1
-        
 # input data baru
         nama = input("Nama produk: ").strip().title()
         kategori = input("Kategori: ").strip().title()
@@ -314,6 +308,8 @@ def ubah_produk():
         file_product = 'product.csv'
 
         if not os.path.exists(file_product):
+            with open('product.csv', 'a', newline='') as f:
+                csv.writer(f).writerow([id_p, nama, kategori, harga, stok, subsidi])
             print("Belum ada produk.")
             input("\nTekan Enter...")
             break
@@ -336,9 +332,9 @@ def ubah_produk():
             break
 
         # ambil data based id
-        data_produk = df[df['id'] == id_p] #
+        data_produk = df[df['id'] == id_p] #klo sama dengan df nanti bakal masuk ke variabel dataproduk 
         # ambil nilai idx 0 dri data_produk
-        data = data_produk.iloc[0]
+        data = data_produk.iloc[0] #ini buat ngambil satu barisnya 
 
 
         # menampilkan data produk yg akan diubah
@@ -351,25 +347,20 @@ def ubah_produk():
 
 
         try:
-            nama = input("/nNama baru: ").strip().title()
+            nama = input("\nNama baru: ").strip().title()
             kategori = input("Kategori baru: ").strip().title()
             harga = int(input("Harga: "))
             stok = int(input("Stok: "))
             subsidi = input("Subsidi (ya/tidak): ").strip().title()
 
             if nama :
-                df.loc[df['id'] == id_p, 'NamaProduk'] = nama
+                df.loc[df['id'] == id_p, 'NamaProduk'] = nama #buat gnti produk barunya
             if kategori :   
                 df.loc[df['id'] == id_p, 'Kategori'] = kategori                 
             if harga :
                 df.loc[df['id'] == id_p, 'Harga'] = harga
             if stok :
                 df.loc[df['id'] == id_p, 'Stok'] = stok
-
-            # with open('product.csv', 'a', newline='') as f:
-            #     csv.writer(f).writerow([id_p, nama, kategori, harga, stok, subsidi]).
-            print("Produk berhasil ditambahkan!")
-            input("\nTekan Enter...")
         except ValueError:
             print("Harga dan stok harus berupa angka!")
             input("\n Tekan Enter...")
@@ -443,7 +434,7 @@ def laporan():
         print(tabulate(harian, headers="keys", tablefmt="grid"))
 
         input("\nTekan Enter...")
-
+#BELUM SELESAI
 
 # ------------------------ MENU USER ------------------------
 def menu_user(username):
