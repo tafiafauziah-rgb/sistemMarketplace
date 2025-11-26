@@ -674,7 +674,7 @@ def hapus_dari_keranjang(username):
         print("Produk berhasil dihapus dari keranjang!")
         break 
         # input("Tekan Enter...")
-#-----------------------------METODE PEMBAYARAN------------------------
+#-----------------------------METODE PEMBAYARAN---------------
 #def metodePembayaran():
 def metode_pembayaran(username):
     os.system('cls')
