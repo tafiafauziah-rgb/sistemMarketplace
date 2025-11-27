@@ -4,7 +4,30 @@ import pandas as pd
 from tabulate import tabulate
 from datetime import datetime
 
+# ------------------------ MENU UTAMA ------------------------
 
+def main_menu():
+    while True:
+        os.system('cls')
+        teks = """
+    
+        ██████╗░██╗░░░██╗██████╗░██╗░░░██╗░██████╗░██╗░░░██╗███████╗███████╗███╗░░██╗░██████╗
+        ██╔══██╗██║░░░██║██╔══██╗██║░░░██║██╔═══██╗██║░░░██║██╔════╝██╔════╝████╗░██║██╔════╝
+        ██████╔╝██║░░░██║██████╔╝██║░░░██║██║██╗██║██║░░░██║█████╗░░█████╗░░██╔██╗██║╚█████╗░
+        ██╔═══╝░██║░░░██║██╔═══╝░██║░░░██║╚██████╔╝██║░░░██║██╔══╝░░██╔══╝░░██║╚████║░╚═══██╗
+        ██║░░░░░╚██████╔╝██║░░░░░╚██████╔╝░╚═██╔═╝░╚██████╔╝███████╗███████╗██║░╚███║██████╔╝
+        ╚═╝░░░░░░╚═════╝░╚═╝░░░░░░╚═════╝░░░░╚═╝░░░░╚═════╝░╚══════╝╚══════╝╚═╝░░╚══╝╚═════╝░
+        """
+        print(teks)
+
+        print("===================================================================")
+        print("    MARKETPLACE BIBIT & PUPUK    ")
+        print("===================================================================")
+        print("1. Register (Daftar Akun Baru)")
+        print("2. Login")
+        print("3. Keluar")
+        print("===================================================================")
+        pilihan = input("Pilih menu (1/2/3): ").strip()
 # ------------------------ FUNGSI REGISTER USER ------------------------
 def register():
     os.system('cls')
@@ -15,9 +38,6 @@ def register():
         print("0. Kembali ke menu utama")
         p = input("Pilih: ").strip() 
 
-        # if p == '1':
-        #     regadmin() #manggil fungsi sbg admin
-            # return  # kembali ke menu utama
         if p == '1':
             username = input("\nMasukkan username: ").strip().lower() #.lower biar semua huruf jd kecil
             password = input("Masukkan password: ").strip().lower()
@@ -95,9 +115,8 @@ def menu_admin(username):
         print(f"=== MENU ADMIN ===\nHalo Admin {username}")
         print("1. Manajemen Pengguna")
         print("2. Manajemen Produk")
-        print("3. Manajemen Transaksi")
-        print("4. Laporan")
-        print("5. Logout")
+        print("3. Laporan")
+        print("4. Logout")
 
         pilihan = input("Pilih menu: ")
 
@@ -105,11 +124,9 @@ def menu_admin(username):
             manajemen_pengguna()
         elif pilihan == '2':
             manajemen_produk()
-        # elif pilihan == '3':
-            # manajemen_transaksi()
-        elif pilihan == '4':
+        elif pilihan == '3':
             laporan()
-        elif pilihan == '5':
+        elif pilihan == '4':
             return main_menu()
         else:
             print("Pilihan tidak valid!")
@@ -151,7 +168,7 @@ def hapus_pengguna():
         os.system('cls')
         file_user = 'user.csv'
         if not os.path.exists(file_user):
-            print("Belum ada produk.")
+            print("Belum ada data.")
             input("\nTekan Enter...")
             break
 
@@ -174,7 +191,7 @@ def hapus_pengguna():
         df = df[df['username'] != user] #ngefilter apa di variabel df kolom username ini ada user apa ngga, klo ada dihapus
         df.to_csv(file_user, index=False) #menyimpan perubahan ke file csv tanpa menyertakan index
 
-        print("Produk berhasil dihapus!")
+        print("Data berhasil dihapus!")
         input("\nTekan Enter...")
         break
 
@@ -238,7 +255,7 @@ def lihat_produk():
         if not os.path.exists(file_product):
             print("Belum ada produk.")
             df = pd.DataFrame(columns=namaColumn) #buat buka dataframe kolomnya dr variabl kolum
-            df = df.reset_index(drop=True)
+            df = df.reset_index(drop=True) #untuk mengurutkan indeks 
             df.to_csv(file_product)
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
             input("Enter untuk kembali...")
@@ -247,7 +264,7 @@ def lihat_produk():
         
         else:
             df = pd.read_csv(file_product)
-            # df = pd.DataFrame(columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'])
+            # df = pd.DataFrame(columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi'])
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
             input("Enter untuk kembali...")
             break
@@ -315,7 +332,7 @@ def ubah_produk():
             break
 
         df = pd.read_csv(file_product)
-        print("Daftar Produk:")
+        print("Daftar Produk:") 
         print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
 
         try:
@@ -446,7 +463,8 @@ def menu_user(username):
         print("3. Tambah produk ke keranjang")
         print("4. Hapus produk dari keranjang ")
         print("5. Metode Pembayaran")
-        print("6. logout")
+        print("6. Riwayat")
+        print("7. logout")
 
         p = input("Pilih menu: ")
 
@@ -460,7 +478,9 @@ def menu_user(username):
             hapus_dari_keranjang(username)
         elif p == '5':   
             metode_pembayaran(username)
-        elif p == '6':   
+        # elif p == '6':   
+            # riwayat(username)
+        elif p == '7':   
             return main_menu()
         else:
             print("Pilihan tidak valid!")
@@ -540,7 +560,7 @@ def tambah_ke_keranjang(username):
         if produk['Stok'] <= 0:
             print("Stok produk ini habis!")
             input("Tekan Enter...")
-            break
+            return tambah_ke_keranjang(username)
             
 
 
@@ -587,17 +607,17 @@ def tambah_ke_keranjang(username):
             writer.writerow([username, id_produk, produk['NamaProduk'], int(produk['Harga']), jumlah, hargaTotal, tanggal])
         print(f"Produk '{produk['NamaProduk']}' berhasil ditambahkan ke keranjang!")
 
-        pilih = input('Mau tambah produk ke keranjang lagi? y/n: ')
+        pilih = input('Mau tambah produk ke keranjang lagi? y/n: ').lower()
 
         if pilih == 'n':
-            pembayaran_transfer(username)
+            # pembayaran(username, pilih)  
+            metode_pembayaran(username)
         elif pilih == 'y':
             return tambah_ke_keranjang(username)
         elif pilih != 'y' or pilih != 'n':
             print("Pilih menu Metode Bayar (5) untuk melakukan pembayaran.")
         input("Tekan Enter untuk kembali...")
         return
-        # return metode_pembayaran(username)
 
 # ------------------------ HAPUS BARANG DARI KERANJANG ------------------------
 def hapus_dari_keranjang(username):
@@ -648,7 +668,7 @@ def hapus_dari_keranjang(username):
                 hasil = hasil[hasil['NamaProduk'].astype(str) != nama_hapus]
                 hasil.reset_index(drop=True, inplace=True)
                 hasil.to_csv(keranjang_file, index=False)
-                print("Pelanggan berhasil dihapus!")
+                print("Produk berhasil dihapus!")
                 input("Enter untuk kembali...")
                 return
             
@@ -676,9 +696,9 @@ def metode_pembayaran(username):
         pilih = input("\nPilih menu: ")
 
         if pilih == '1':
-            pembayaran_transfer(username)
-        # elif pilih == '2':
-        #     pembayaran_ditempat():
+            pembayaran(username, pilih)
+        elif pilih == '2':
+            pembayaran(username, pilih)
         elif pilih == '0':
             return
         else:
@@ -686,97 +706,184 @@ def metode_pembayaran(username):
             input("Tekan Enter untuk kembali")
             return
 
-def pembayaran_transfer(username):
+def pembayaran(username, pilih):
     os.system('cls')
     print("===== PEMBAYARAN VIA TRANSFER =====")
 
     keranjang_file = 'keranjang.csv'
     produk_file = 'product.csv'
     transaksi_file = 'transaksi.csv'
+    riwayat_file = 'riwayat.csv'
 
-    # Cek file keranjang
+    # Cek keranjang
     if not os.path.exists(keranjang_file):
         print("Keranjang masih kosong.")
-        input("Enter...")
+        input("Tekan Enter...")
         return
 
     df_keranjang = pd.read_csv(keranjang_file)
 
-    # Filter user yg login
-    df_user = df_keranjang[df_keranjang['username'] == username]
+    # filter keranjang user
+    df_user = df_keranjang[df_keranjang['username'] == username].copy()
 
     if df_user.empty:
         print("Keranjang Anda kosong.")
-        input("Enter...")
+        input("Tekan Enter...")
         return
 
-    # Tampilkan keranjang user
+    # reset index supaya ada kolom index asli
+    df_user = df_user.reset_index()          # kolom "index" ini adalah index asli di df_keranjang
+    df_user = df_user.rename(columns={"index": "index_asal"})
+
+    # tambah kolom "No" untuk ditampilkan ke user (1,2,3,...)
+    df_tampil = df_user.copy()
+    df_tampil["No"] = range(1, len(df_tampil) + 1)
+
+    # tampilkan tabel keranjang user
     print("\nKeranjang Anda:")
-    print(tabulate(df_user[['NamaProduk', 'Jumlah', 'Harga', 'hargaTotal']],
-            headers='keys',tablefmt='fancy_grid', showindex=False))
-    
-    df_user.to_csv(keranjang_file, index=False)
+    print(
+        tabulate(
+            df_tampil[["No", "NamaProduk", "Jumlah", "Harga", "hargaTotal", "tanggal"]],
+            headers="keys",
+            tablefmt="fancy_grid",
+            showindex=False
+        )
+    )
 
-    konfirmasi = input("\nBayar semua produk ini? (y/n): ").strip().lower()
-    if  konfirmasi == 'n':
-        metode_pembayaran(username)
+    # pilih produk mana yang mau dibayar
+    print("\nPilih produk yang ingin dibayar:")
+    print("- Ketik nomor item, misalnya: 1 atau 1,3,4")
+    print("- Ketik 'all' untuk bayar semua")
+    print("- Ketik 0 untuk batal")
+    print("- Ketik 'e' untuk menghapus produk keranjang")
+
+    pilihan = input("Masukkan pilihan: ").strip().lower()
+
+    if pilihan == '0':
+        print("Pembayaran dibatalkan.")
+        input("Tekan Enter...")
+        return 
+
+    # tentukan baris yang dipilih
+    baris_terpilih = []       # list berisi baris yang akan dibayar
+    index_asal_terpilih = []  # list index_asal untuk dihapus dari keranjang nanti
+
+    if pilihan == 'all':
+        # jika user memilih semua
+        for i in range(len(df_user)):
+            baris = df_user.iloc[i]
+            baris_terpilih.append(baris)
+            index_asal_terpilih.append(int(baris["index_asal"]))
+    elif pilihan == 'e':
+        hapus_dari_keranjang(username)
         return
-    elif konfirmasi != 'y':
-        print("MASUKKAN PILIHAN YG ADA DI MENU YA KAK.")
-        input("Enter untuk kembali...")
-        os.system('cls')
+    else:
+        # jika user memilih beberapa nomor
+        try:
+            nomor_list = [int(x.strip()) for x in pilihan.split(",") if x.strip() != ""]
+        except ValueError:
+            print("Input tidak valid. Gunakan angka atau 'all'.")
+            input("Tekan Enter...")
+            return
+
+        # validasi nomor
+        for no in nomor_list:
+            if no < 1 or no > len(df_user):
+                print(f"Nomor {no} tidak valid.")
+                input("Tekan Enter...")
+                return
+
+        # ambil baris sesuai nomor
+        for no in nomor_list:
+            idx = no - 1  # karena No mulai dari 1, index dataframe mulai dari 0
+            baris = df_user.iloc[idx]
+            baris_terpilih.append(baris)
+            index_asal_terpilih.append(int(baris["index_asal"]))
+
+    # hitung total bayar dari produk terpilih
+    total_bayar = 0
+    for baris in baris_terpilih:
+        total_bayar += int(baris["hargaTotal"])
+
+    print(f"\nTotal yang akan dibayar untuk produk terpilih: Rp {total_bayar:,}")
+    konfirmasi = input("Lanjutkan pembayaran? (y/n): ").strip().lower()
+    if konfirmasi != 'y':
+        print("Pembayaran dibatalkan.")
+        input("Tekan Enter...")
         return
 
-
-    # Cek dan update stok produk
+    # baca data produk untuk update stok
     if not os.path.exists(produk_file):
-        print("File produk tidak ditemukan!")
-        input("Enter...")
+        print("File produk tidak ditemukan! Gagal update stok.")
+        input("Tekan Enter...")
         return
 
     df_produk = pd.read_csv(produk_file)
 
-    # PROSES UPDATE STOK
-    for _, row in df_user.iterrows():
-        idp = row['id']
-        qty = row['Jumlah']
+    # kurangi stok hanya untuk produk yang dibayar
+    for baris in baris_terpilih:
+        pid = baris["id"]
+        qty = int(baris["Jumlah"])
 
-        if idp in df_produk['id'].values:
-            stok_awal = df_produk.loc[df_produk['id'] == idp, 'Stok'].iloc[0]
+        if pid in df_produk["id"].values:
+            stok_awal = df_produk.loc[df_produk["id"] == pid, "Stok"].iloc[0]
             stok_baru = stok_awal - qty
             if stok_baru < 0:
-                stok_baru = 0
+                stok_baru = 0  # menghindari stok negatif
+            df_produk.loc[df_produk["id"] == pid, "Stok"] = stok_baru
 
-            df_produk.loc[df_produk['id'] == idp, 'Stok'] = stok_baru
-
-    # Simpan product.csv versi baru
+    # simpan perubahan stok
     df_produk.to_csv(produk_file, index=False)
 
-    # =====================
-    #  SIMPAN transaksi.csv
-    # =====================
-
-    # Buat file jika belum ada
+    # simpan ke transaksi.csv
+    # format: NamaUser, NamaProduk, Jumlah, Harga, HargaTotal
     if not os.path.exists(transaksi_file):
         with open(transaksi_file, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['NamaUser', 'NamaProduk', 'Jumlah', 'Harga', 'HargaTotal'])
+            writer.writerow(['NamaUser', 'NamaProduk', 'Jumlah', 'Harga', 'HargaTotal', 'Pembayaran'])
 
-    # Tulis per item
     with open(transaksi_file, 'a', newline='') as f:
         writer = csv.writer(f)
-        for _, row in df_user.iterrows():
+        for baris in baris_terpilih:
             writer.writerow([
                 username,
-                row['NamaProduk'],
-                int(row['Jumlah']),
-                int(row['Harga']),
-                int(row['hargaTotal'])
+                baris["NamaProduk"],
+                int(baris["Jumlah"]),
+                int(baris["Harga"]),
+                int(baris["hargaTotal"]),
+                "transfer" if pilih == '1' else
+                "di tempat"   # metode pembayaran, sesuai pilihan user
             ])
 
-    # =====================
-    #  HAPUS DATA KERANJANG USER
-    # =====================
+    if not os.path.exists(riwayat_file):
+        with open(riwayat_file, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['NamaUser', 'TanggalBeli', 'NamaProduk',
+                            'JumlahProduk','HargaProduk', 'HargaTotal', 'Pembayaran'])
+
+    with open(riwayat_file, 'a', newline='') as f:
+        writer = csv.writer(f)
+        for baris in baris_terpilih:
+            writer.writerow([
+                username,
+                baris["tanggal"],
+                baris["NamaProduk"],
+                int(baris["Jumlah"]),
+                int(baris["Harga"]),
+                int(baris["hargaTotal"]),
+                "transfer" if pilih == '1' else
+                "di tempat"   # metode pembayaran, sesuai pilihan user
+            ])
+
+    # hapus hanya produk yang sudah dibayar dari keranjang user
+    df_keranjang = df_keranjang.drop(index_asal_terpilih)
+    df_keranjang.to_csv(keranjang_file, index=False)
+    print("\nPembayaran berhasil untuk produk yang dipilih, terima kasih!")
+    print("Stok produk sudah diperbarui.")
+    input("Tekan Enter...")
+    return menu_user(username)
+
+    # =====================HAPUS DATA KERANJANG USER=====================
     df_sisa = df_keranjang[df_keranjang['username'] != username]
     df_sisa.to_csv(keranjang_file, index=False)
 
@@ -787,34 +894,6 @@ def pembayaran_transfer(username):
 
     input("Tekan Enter...")
     return menu_user(username)
-
-# ------------------------ MENU UTAMA ------------------------
-def main_menu():
-    while True:
-        os.system('cls')
-        print("===================================================================")
-        print("    MARKETPLACE BIBIT & PUPUK    ")
-        print("===================================================================")
-        print("1. Register (Daftar Akun Baru)")
-        print("2. Login")
-        print("3. Keluar")
-        print("===================================================================")
-        pilihan = input("Pilih menu (1/2/3): ").strip()
-
-        if pilihan == '1':
-            register()
-        elif pilihan == '2':
-            login()
-        elif pilihan == '3':
-            os.system('cls')
-            print("===============================================================")
-            print("===*                                                       *===")
-            print("=== Terima kasih telah menggunakan sistem marketplace ini! ====")
-            print("===*                                                       *===")
-            print("===============================================================")
-            exit()
-        else:
-            input("Pilihan tidak valid! Tekan Enter untuk mencoba lagi...")
 
 # ------------------------ JALANKAN PROGRAM ------------------------
 

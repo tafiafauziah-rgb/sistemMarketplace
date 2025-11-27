@@ -6,3 +6,33 @@ pi,Organik,10,80000,800000
 pi,Organik,10,80000,800000
 pi,Organik,2,80000,160000
 pi,Organik,10,80000,800000
+nei,Organik,10,80000,800000
+nei,Kris,2,20000,40000
+nei,Kandang,10,20000,200000
+nei,Kandang,5,20000,100000
+nei,Kandang,5,20000,100000
+nei,Kolam,2,20000,40000
+nei,Kandang,10,20000,200000
+nei,Kris,5,20000,100000
+nei,Organik,10,80000,800000
+nei,Organik,5,80000,400000
+nei,Kris,5,20000,100000
+nei,Kolam,2,20000,40000
+nei,Organik,5,80000,400000
+nei,Kris,5,20000,100000
+nei,Kolam,3,20000,60000
+nei,Kolam,3,20000,60000
+nei,Kolam,2,20000,40000
+nei,Kolam,5,20000,100000
+wilda,Kandang,10,20000,200000
+nei,Kris,5,20000,100000,transfer
+nei,Kris,5,20000,100000,di tempat
+nei,Tumbuhprima,10,50000,500000,transfer
+nei,Ecofert,10,150000,1500000,di tempat
+nei,Greenboost,10,125000,1250000,di tempat
+nei,Supertanah,10,235000,2350000,transfer
+nei,Agroseed,10,50000,500000,transfer
+nei,Tumbuhprima,10,50000,500000,transfer
+nei,Greenboost,12,125000,1500000,transfer
+nei,Tumbuhprima,10,50000,500000,transfer
+r,Tumbuhprima,10,50000,500000,transfer
