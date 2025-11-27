@@ -36,3 +36,6 @@ nei,Tumbuhprima,10,50000,500000,transfer
 nei,Greenboost,12,125000,1500000,transfer
 nei,Tumbuhprima,10,50000,500000,transfer
 r,Tumbuhprima,10,50000,500000,transfer
+r,Tumbuhprima,1,50000,50000,transfer
+r,Agroseed,1,50000,50000,transfer
+r,Agroseed,2,50000,100000,transfer

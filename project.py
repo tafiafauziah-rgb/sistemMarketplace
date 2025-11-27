@@ -28,6 +28,21 @@ def main_menu():
         print("3. Keluar")
         print("===================================================================")
         pilihan = input("Pilih menu (1/2/3): ").strip()
+        if pilihan == '1':
+            register()
+        elif pilihan == '2':
+            login()
+        elif pilihan == '3':
+            os.system('cls')
+            print("===============================================================")
+            print("===*                                                       *===")
+            print("=== Terima kasih telah menggunakan sistem marketplace ini! ====")
+            print("===*                                                       *===")
+            print("===============================================================")
+            exit()
+        else:
+            input("Pilihan tidak valid! Tekan Enter untuk mencoba lagi...")
+
 # ------------------------ FUNGSI REGISTER USER ------------------------
 def register():
     os.system('cls')
@@ -125,7 +140,7 @@ def menu_admin(username):
         elif pilihan == '2':
             manajemen_produk()
         elif pilihan == '3':
-            laporan()
+            laporanadmin()
         elif pilihan == '4':
             return main_menu()
         else:
@@ -371,7 +386,7 @@ def ubah_produk():
             subsidi = input("Subsidi (ya/tidak): ").strip().title()
 
             if nama :
-                df.loc[df['id'] == id_p, 'NamaProduk'] = nama #buat gnti produk barunya
+                df.loc[df['id'] == id_p, 'NamaProduk'] = nama #buat gnti produk barunya .loc itu buat ngambil lbh spesifik
             if kategori :   
                 df.loc[df['id'] == id_p, 'Kategori'] = kategori                 
             if harga :
@@ -382,7 +397,6 @@ def ubah_produk():
             print("Harga dan stok harus berupa angka!")
             input("\n Tekan Enter...")
             break
-
 
 
         df.to_csv(file_product, index=False)
@@ -425,7 +439,7 @@ def hapus_produk():
 
 
 # ------------------------ LAPORAN -- ADMIN ------------------------
-def laporan():
+def laporanadmin():
     while True:
         os.system('cls')
         print("===== LAPORAN TRANSAKSI =====")
@@ -534,7 +548,7 @@ def tambah_ke_keranjang(username):
         
         # Cek apakah produk tersedia
         if not os.path.exists('product.csv'):
-            print("Belum ada produk! Silakan tambahkan produk terlebih dahulu (oleh admin).")
+            print("Belum ada produk! Silakan tambahkan produk terlebih dahulu.")
             input("Tekan Enter untuk kembali...")
             break
 
@@ -563,7 +577,6 @@ def tambah_ke_keranjang(username):
             return tambah_ke_keranjang(username)
             
 
-
         # Input jumlah
         try:
             jumlah = int(input(f"Jumlah (Stok tersedia: {produk['Stok']}): "))
@@ -584,7 +597,7 @@ def tambah_ke_keranjang(username):
         if not tanggal:
             tanggal = datetime.now().strftime("%d-%m-%Y")
 
-        harga = df_produk.loc[df_produk['id'] == id_produk ,'Harga'].values[0] 
+        harga = df_produk.loc[df_produk['id'] == id_produk ,'Harga'].values[0] #gambil dr ID yg uda dipilih 
         hargaTotal = harga * jumlah
 
         # Pastikan file keranjang ada
@@ -610,8 +623,8 @@ def tambah_ke_keranjang(username):
         pilih = input('Mau tambah produk ke keranjang lagi? y/n: ').lower()
 
         if pilih == 'n':
-            # pembayaran(username, pilih)  
-            metode_pembayaran(username)
+            input("Enter untuk ke menu user...")
+            return menu_user(username)
         elif pilih == 'y':
             return tambah_ke_keranjang(username)
         elif pilih != 'y' or pilih != 'n':
@@ -634,7 +647,7 @@ def hapus_dari_keranjang(username):
         df = pd.read_csv(keranjang_file)
         user_cart = df[df['username'] == username]
 
-        if user_cart.empty:
+        if user_cart.empty: #jika file nya gaada isi 
             print("Keranjang Anda kosong.")
             input("Tekan Enter...")
             break
@@ -655,9 +668,9 @@ def hapus_dari_keranjang(username):
             break
 
         # Hapus baris yang cocok
-        df = df.astype(str) #cari perbedaan astype dan dstype
+        df = df.astype(str) #cari perbedaan astype dan dstype #buat ngubah
         hasil = df[
-            df['NamaProduk'].str.contains(nama_hapus, case=False)] #.str.contains = untuk memeriksa apakah ada suatu str yg mengandungg kata tertentu
+            df['NamaProduk'].str.contains(nama_hapus, case=False)] #.str.contains = untuk memeriksa apakah ada kata yang mirip 
 # tampilkan hasil pencarian
         if not hasil.empty:
             os.system('cls')
@@ -665,9 +678,9 @@ def hapus_dari_keranjang(username):
         try:
             pilih = input("\n Yakin ingin mengahapus? y/n: ").lower()
             if pilih == 'y':
-                hasil = hasil[hasil['NamaProduk'].astype(str) != nama_hapus]
-                hasil.reset_index(drop=True, inplace=True)
-                hasil.to_csv(keranjang_file, index=False)
+                hasil = hasil[hasil['NamaProduk'].astype(str) != nama_hapus] # klo nama produk ada di kolom namaProduk dalam variabel hasil nanti bakal dihapus
+                hasil.reset_index(drop=True, inplace=True)  #data lama lngsung keapus, lngsng disimpan tanpa variabel 
+                hasil.to_csv(keranjang_file, index=False) #save 
                 print("Produk berhasil dihapus!")
                 input("Enter untuk kembali...")
                 return
@@ -696,7 +709,7 @@ def metode_pembayaran(username):
         pilih = input("\nPilih menu: ")
 
         if pilih == '1':
-            pembayaran(username, pilih)
+            pembayaran(username, pilih) 
         elif pilih == '2':
             pembayaran(username, pilih)
         elif pilih == '0':
@@ -755,7 +768,7 @@ def pembayaran(username, pilih):
     print("- Ketik nomor item, misalnya: 1 atau 1,3,4")
     print("- Ketik 'all' untuk bayar semua")
     print("- Ketik 0 untuk batal")
-    print("- Ketik 'e' untuk menghapus produk keranjang")
+    # print("- Ketik 'e' untuk menghapus produk keranjang")
 
     pilihan = input("Masukkan pilihan: ").strip().lower()
 
@@ -774,9 +787,9 @@ def pembayaran(username, pilih):
             baris = df_user.iloc[i]
             baris_terpilih.append(baris)
             index_asal_terpilih.append(int(baris["index_asal"]))
-    elif pilihan == 'e':
-        hapus_dari_keranjang(username)
-        return
+    # elif pilihan == 'e':
+    #     hapus_dari_keranjang(username)
+    #     return
     else:
         # jika user memilih beberapa nomor
         try:
@@ -810,7 +823,7 @@ def pembayaran(username, pilih):
     if konfirmasi != 'y':
         print("Pembayaran dibatalkan.")
         input("Tekan Enter...")
-        return
+        return 
 
     # baca data produk untuk update stok
     if not os.path.exists(produk_file):
