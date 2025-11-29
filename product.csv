@@ -1,7 +1,7 @@
 id,NamaProduk,Kategori,Harga,Stok,Subsidi
-1,Tumbuhprima,Bibit,50000,58,Ya
-2,Agroseed,Bibit,50000,104,Tidak
-3,Greenstart,Bibit,70000,120,Tidak
+1,Tumbuhprima,Bibit,50000,0,Ya
+2,Agroseed,Bibit,50000,90,Tidak
+3,Greenstart,Bibit,70000,90,Tidak
 4,Suburjaya,Bibit,90000,100,Tidak
 5,Freshgrow,Bibit,75000,100,Ya
 6,Primaseed,Bibit,50000,120,Tidak
@@ -9,7 +9,7 @@ id,NamaProduk,Kategori,Harga,Stok,Subsidi
 8,Agrogrow,Pupuk,200000,100,Tidak
 9,Biomax,Pupuk,120000,70,Ya
 10,Greenboost,Pupuk,125000,48,Ya
-11,Supertanah,Pupuk,235000,90,Tidak
+11,Supertanah,Pupuk,235000,80,Tidak
 12,Bioharvest,Pupuk,145000,90,Tidak
 13,Nutriplus,Pupuk,125000,67,Tidak
 14,Growrich,Pupuk,120000,80,Tidak

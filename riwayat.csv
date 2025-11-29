@@ -1,15 +1,9 @@
 NamaUser,TanggalBeli,NamaProduk,JumlahProduk,HargaProduk,HargaTotal,Pembayaran
-nei,26-11-2025,Kris,5,20000,100000,transfer
-nei,27-11-2025,Kris,5,20000,100000,di tempat
-nei,27-11-2025,Tumbuhprima,10,50000,500000,transfer
-nei,27-11-2025,Ecofert,10,150000,1500000,di tempat
-nei,27-11-2025,Greenboost,10,125000,1250000,di tempat
-nei,27-11-2025,Supertanah,10,235000,2350000,transfer
-nei,27-11-2025,Agroseed,10,50000,500000,transfer
-nei,27-11-2025,Tumbuhprima,10,50000,500000,transfer
-nei,27-11-2025,Greenboost,12,125000,1500000,transfer
-nei,27-11-2025,Tumbuhprima,10,50000,500000,transfer
-r,27-11-2025,Tumbuhprima,10,50000,500000,transfer
-r,27-11-2025,Tumbuhprima,1,50000,50000,transfer
+r,27-11-2025,Greenstart,10,70000,700000,transfer
 r,27-11-2025,Agroseed,1,50000,50000,transfer
-r,27-11-2025,Agroseed,2,50000,100000,transfer
+r,27-11-2025,Agroseed,1,50000,50000,transfer
+r,27-11-2025,Greenstart,1,70000,70000,transfer
+nei,29-11-2025,Greenstart,10,70000,700000,transfer
+nei,29-11-2025,Greenstart,9,70000,630000,transfer
+nei,29-11-2025,Supertanah,10,235000,2350000,transfer
+nei,29-11-2025,Agroseed,8,50000,400000,di tempat
