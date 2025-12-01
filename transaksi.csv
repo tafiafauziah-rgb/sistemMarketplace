@@ -57,3 +57,5 @@ nei,Greenstart,10,70000,700000,transfer
 nei,Greenstart,9,70000,630000,transfer
 nei,Supertanah,10,235000,2350000,transfer
 nei,Agroseed,8,50000,400000,di tempat
+r,Greenstart,10,70000,700000,transfer
+r,Agroseed,1,50000,50000,transfer

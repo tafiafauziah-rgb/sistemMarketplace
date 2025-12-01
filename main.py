@@ -54,13 +54,13 @@ def register():
         p = input("Pilih: ").strip() 
 
         if p == '1':
-            username = input("\nMasukkan username: ").strip().lower() #.lower biar semua huruf jd kecil
+            username = input("\nMasukkan username: ").strip().lower() 
             password = input("Masukkan password: ").strip().lower()
 
             if not username or not password:
                 print("\nUsername dan password tidak boleh kosong!")
                 input("Tekan Enter untuk ulangi...")
-                continue #klo true bisa lanjut ke kondisi selanjutnya
+                continue 
 
             # Pastikan file user.csv ada
             if not os.path.exists('user.csv'):
@@ -71,23 +71,23 @@ def register():
             # Cek apakah username sudah ada
             with open('user.csv', 'r', newline='') as file:
                 reader = csv.reader(file)
-                next(reader, None)  # Lewati header
-                for row in reader: #dibaca baris satu persatu
+                next(reader, None)  
+                for row in reader: 
                     if row and row[0] == username:
                         print("\nUsername sudah digunakan!")
                         input("Tekan Enter untuk kembali...")
                         break
 
             # Simpan user baru
-            with open('user.csv', 'a', newline='') as file: #pake append 'a' biar baris baru ditambahin di akhr file
-                csv.writer(file).writerow([username, password, 'user']) #pasworadnya disimpan plain text artinya disimpan apa adany tanpa dan bisa dibaca sp aja yg buka file csvnya
+            with open('user.csv', 'a', newline='') as file: 
+                csv.writer(file).writerow([username, password, 'user']) 
 
             print(f"\nRegistrasi berhasil! Selamat datang, {username}!")
             input("Tekan Enter untuk kembali ke menu utama...")
             return
 
-        elif p == '0': #jika ngetik 0 maka balik ke menu utama / keluar dr register
-            return  # kembali ke menu utama
+        elif p == '0': 
+            return 
         else:
             print("\nPilihan tidak valid! Masukkan 1, 2, atau 0.")
             input("Tekan Enter untuk ulangi...")
@@ -100,13 +100,13 @@ def login():
     username = input("Masukkan username: ").strip().lower()
     password = input("Masukkan password: ").strip().lower()
 
-    if not os.path.exists('user.csv'): #cek apakah file csv uda ada apa blm
+    if not os.path.exists('user.csv'): 
         print("\nBelum ada akun! Silakan daftar terlebih dahulu.")
         input("Tekan Enter untuk kembali...")
         return
 
-    with open('user.csv', 'r', newline='') as file: #mbaca file csv
-        reader = csv.DictReader(file) #membaca csv trus ngubah tiap baris jd dictionary
+    with open('user.csv', 'r', newline='') as file: 
+        reader = csv.DictReader(file) 
         for row in reader:
             if row['username'] == username and row['password'] == password:
                 role = row['role']
@@ -203,8 +203,8 @@ def hapus_pengguna():
             input("Enter...")
             break
 
-        df = df[df['username'] != user] #ngefilter apa di variabel df kolom username ini ada user apa ngga, klo ada dihapus
-        df.to_csv(file_user, index=False) #menyimpan perubahan ke file csv tanpa menyertakan index
+        df = df[df['username'] != user] 
+        df.to_csv(file_user, index=False) 
 
         print("Data berhasil dihapus!")
         input("\nTekan Enter...")
@@ -218,7 +218,7 @@ def lihat_pengguna():
         namaColumn = 'user', 'password', 'role'
         if not os.path.exists(file_product):
             print("Belum ada produk.")
-            df = pd.DataFrame(columns=namaColumn) #buat buka dataframe kolomnya dr variabl kolum
+            df = pd.DataFrame(columns=namaColumn) 
             df.to_csv(file_product) 
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
             input("Enter untuk kembali...")
@@ -227,7 +227,6 @@ def lihat_pengguna():
         
         else:
             df = pd.read_csv(file_product)
-            # df = pd.DataFrame(columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'])
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
             input("Enter untuk kembali...")
             break
@@ -269,8 +268,8 @@ def lihat_produk():
         namaColumn = 'id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi'
         if not os.path.exists(file_product):
             print("Belum ada produk.")
-            df = pd.DataFrame(columns=namaColumn) #buat buka dataframe kolomnya dr variabl kolum
-            df = df.reset_index(drop=True) #untuk mengurutkan indeks 
+            df = pd.DataFrame(columns=namaColumn) 
+            df = df.reset_index(drop=True) 
             df.to_csv(file_product)
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
             input("Enter untuk kembali...")
@@ -279,7 +278,6 @@ def lihat_produk():
         
         else:
             df = pd.read_csv(file_product)
-            # df = pd.DataFrame(columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi'])
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
             input("Enter untuk kembali...")
             break
@@ -303,9 +301,9 @@ def tambah_produk():
             with open(file_product, 'r', newline='') as f:
                 reader = csv.reader(f)
                 f = list(reader)
-            if len(f) > 1: #ngecek panjang item di variabel f
-                    id_terakhir = int(f[-1][0]) #-1 baris paling akhir tapi ngambil dr kolom ke 0 atau pertama
-                    id_new = id_terakhir + 1 #ditambah di indeks akhir
+            if len(f) > 1: 
+                    id_terakhir = int(f[-1][0]) 
+                    id_new = id_terakhir + 1 
             else:
                 id_new = 1 
 
@@ -318,7 +316,7 @@ def tambah_produk():
         try:
             harga = int(input("Harga: "))
             stok = int(input("Stok: "))
-            subsidi = input("Subsidi (ya/tidak): ").strip().title() #strip buat ngilangin spasi title buat bikin huruf awal jd kapital
+            subsidi = input("Subsidi (ya/tidak): ").strip().title() 
 
             with open('product.csv', 'a', newline='') as f:
                 csv.writer(f).writerow([id_new, nama, kategori, harga, stok, subsidi])
@@ -358,15 +356,15 @@ def ubah_produk():
             input("Enter...")
             break
 
-        if id_p not in df['id'].values: #ngecek id_p itu ada di variabel df di kolom id
+        if id_p not in df['id'].values: 
             print("ID tidak ditemukan!")
             input("Enter...")
             break
 
         # ambil data based id
-        data_produk = df[df['id'] == id_p] #klo sama dengan df nanti bakal masuk ke variabel dataproduk 
+        data_produk = df[df['id'] == id_p]  
         # ambil nilai idx 0 dri data_produk
-        data = data_produk.iloc[0] #ini buat ngambil satu barisnya 
+        data = data_produk.iloc[0] 
 
 
         # menampilkan data produk yg akan diubah
@@ -386,7 +384,7 @@ def ubah_produk():
             subsidi = input("Subsidi (ya/tidak): ").strip().title()
 
             if nama :
-                df.loc[df['id'] == id_p, 'NamaProduk'] = nama #buat gnti produk barunya .loc itu buat ngambil lbh spesifik
+                df.loc[df['id'] == id_p, 'NamaProduk'] = nama 
             if kategori :   
                 df.loc[df['id'] == id_p, 'Kategori'] = kategori                 
             if harga :
@@ -509,14 +507,13 @@ def cariProduct():
         namaColumn = 'id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'
         if not os.path.exists(data_product):
             print("Belum ada pengguna.")
-            df = pd.DataFrame(columns=namaColumn) #membuat formulir kosong dengan judul kolom yang sudah ditentukan, siap diisi data nanti. 
+            df = pd.DataFrame(columns=namaColumn)  
             df.to_csv(data_product)
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
             input("\nTekan Enter...")
             break
         else:
             df = pd.read_csv(data_product)
-            # df = pd.DataFrame(columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'])
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
 
         try:
@@ -595,9 +592,9 @@ def tambah_ke_keranjang(username):
         
         tanggal = input("Masukkan tanggal (DD-MM-YYYY) atau Enter untuk hari ini: ").strip()
         if not tanggal:
-            tanggal = datetime.now().strftime("%d-%m-%Y") #buat formatnya
+            tanggal = datetime.now().strftime("%d-%m-%Y")
 
-        harga = df_produk.loc[df_produk['id'] == id_produk ,'Harga'].values[0] #gambil dr ID yg uda dipilih 
+        harga = df_produk.loc[df_produk['id'] == id_produk ,'Harga'].values[0] 
         hargaTotal = harga * jumlah
 
         # Pastikan file keranjang ada
@@ -668,9 +665,9 @@ def hapus_dari_keranjang(username):
             break
 
         # Hapus baris yang cocok
-        df = df.astype(str) #cari perbedaan astype dan dstype #buat ngubah SEMUA data di DataFrame menjadi teks (string). 
+        df = df.astype(str) 
         hasil = df[
-            df['NamaProduk'].str.contains(nama_hapus, case=False)] #.str.contains = untuk memeriksa apakah ada kata yang mirip 
+            df['NamaProduk'].str.contains(nama_hapus, case=False)] 
 # tampilkan hasil pencarian
         if not hasil.empty:
             os.system('cls')
@@ -678,9 +675,9 @@ def hapus_dari_keranjang(username):
         try:
             pilih = input("\n Yakin ingin mengahapus? y/n: ").lower()
             if pilih == 'y':
-                hasil = df[df['NamaProduk'].astype(str) != nama_hapus] # klo nama produk ada di kolom namaProduk dalam variabel hasil nanti bakal dihapus
-                hasil.reset_index(drop=True, inplace=True)  #data lama lngsung keapus, lngsng disimpan tanpa variabel 
-                hasil.to_csv(keranjang_file, index=False) #save 
+                hasil = df[df['NamaProduk'].astype(str) != nama_hapus] 
+                hasil.reset_index(drop=True, inplace=True)  
+                hasil.to_csv(keranjang_file, index=False) 
                 print("Produk berhasil dihapus!")
                 input("Enter untuk kembali...")
                 return
@@ -697,9 +694,8 @@ def hapus_dari_keranjang(username):
         
         print("Produk berhasil dihapus dari keranjang!")
         break 
-        # input("Tekan Enter...")
+
 #-----------------------------METODE PEMBAYARAN---------------
-#def metodePembayaran():
 def metode_pembayaran(username):
     os.system('cls')
     
@@ -737,7 +733,7 @@ def pembayaran(username, pilih):
     df_keranjang = pd.read_csv(keranjang_file)
 
     # filter keranjang user
-    df_user = df_keranjang[df_keranjang['username'] == username].copy() #.copy ini buat ngecopy tnpa merusak df krnjangnya
+    df_user = df_keranjang[df_keranjang['username'] == username].copy() 
 
     if df_user.empty:
         print("Keranjang Anda kosong.")
@@ -745,12 +741,12 @@ def pembayaran(username, pilih):
         return
 
     # reset index supaya ada kolom index asli
-    df_user = df_user.reset_index()          # kolom "index" ini adalah index asli di df_keranjang
-    df_user = df_user.rename(columns={"index": "index_asal"}) #supaya ga salah apus data 
+    df_user = df_user.reset_index()          
+    df_user = df_user.rename(columns={"index": "index_asal"}) 
 
     # tambah kolom "No" untuk ditampilkan ke user (1,2,3,...)
-    df_tampil = df_user.copy() #tmpt file yg uda di coppy
-    df_tampil["No"] = range(1, len(df_tampil) + 1) #buat ngitung baris trus ditmbh 1
+    df_tampil = df_user.copy()
+    df_tampil["No"] = range(1, len(df_tampil) + 1) 
 
     # tampilkan tabel keranjang user
     print("\nKeranjang Anda:")
@@ -768,7 +764,6 @@ def pembayaran(username, pilih):
     print("- Ketik nomor item, misalnya: 1 atau 1,3,4")
     print("- Ketik 'all' untuk bayar semua")
     print("- Ketik 0 untuk batal")
-    # print("- Ketik 'e' untuk menghapus produk keranjang")
 
     pilihan = input("Masukkan pilihan: ").strip().lower()
 
@@ -778,8 +773,8 @@ def pembayaran(username, pilih):
         return 
 
     # tentukan baris yang dipilih
-    baris_terpilih = []       # list berisi baris yang akan dibayar
-    index_asal_terpilih = []  # list index_asal untuk dihapus dari keranjang nanti
+    baris_terpilih = []      
+    index_asal_terpilih = []  
 
     if pilihan == 'all':
         # jika user memilih semua
@@ -787,13 +782,10 @@ def pembayaran(username, pilih):
             baris = df_user.iloc[i]
             baris_terpilih.append(baris)
             index_asal_terpilih.append(int(baris["index_asal"]))
-    # elif pilihan == 'e':
-    #     hapus_dari_keranjang(username)
-    #     return
     else:
         # jika user memilih beberapa nomor
         try:
-            nomor_list = [int(x.strip()) for x in pilihan.split(",") if x.strip() != ""] #pahami
+            nomor_list = [int(x.strip()) for x in pilihan.split(",") if x.strip() != ""] 
         except ValueError:
             print("Input tidak valid. Gunakan angka atau 'all'.")
             input("Tekan Enter...")
@@ -801,14 +793,14 @@ def pembayaran(username, pilih):
 
         # validasi nomor
         for no in nomor_list:
-            if no < 1 or no > len(df_user): #ngecek nomer yg dipilih ada di daftar
+            if no < 1 or no > len(df_user): 
                 print(f"Nomor {no} tidak valid.")
                 input("Tekan Enter...")
                 return
 
         # ambil baris sesuai nomor
         for no in nomor_list:
-            idx = no - 1  # karena No mulai dari 1, index dataframe mulai dari 0
+            idx = no - 1 
             baris = df_user.iloc[idx]
             baris_terpilih.append(baris)
             index_asal_terpilih.append(int(baris["index_asal"]))
@@ -836,20 +828,18 @@ def pembayaran(username, pilih):
     # kurangi stok hanya untuk produk yang dibayar
     for baris in baris_terpilih:
         p = baris["id"] 
-        q= int(baris["Jumlah"]) #jumlh produk yg ingin dibeli
+        q= int(baris["Jumlah"]) 
 
         if p in df_produk["id"].values:
             stok_awal = df_produk.loc[df_produk["id"] == p, "Stok"].iloc[0]
             stok_baru = stok_awal - q
             if stok_baru < 0: 
-                stok_baru = 0  # menghindari stok negatif
+                stok_baru = 0  
             df_produk.loc[df_produk["id"] == p, "Stok"] = stok_baru 
 
     # simpan perubahan stok
     df_produk.to_csv(produk_file, index=False)
 
-    # simpan ke transaksi.csv
-    # format: NamaUser, NamaProduk, Jumlah, Harga, HargaTotal
     if not os.path.exists(transaksi_file):
         with open(transaksi_file, 'w', newline='') as f:
             writer = csv.writer(f)
@@ -865,7 +855,7 @@ def pembayaran(username, pilih):
                 int(baris["Harga"]),
                 int(baris["hargaTotal"]),
                 "transfer" if pilih == '1' else
-                "di tempat"   # metode pembayaran, sesuai pilihan user
+                "di tempat"  
             ])
 
     if not os.path.exists(riwayat_file):
@@ -885,7 +875,7 @@ def pembayaran(username, pilih):
                 int(baris["Harga"]),
                 int(baris["hargaTotal"]),
                 "transfer" if pilih == '1' else
-                "di tempat"   # metode pembayaran, sesuai pilihan user
+                "di tempat"   
             ])
 
     # hapus hanya produk yang sudah dibayar dari keranjang user
@@ -914,7 +904,7 @@ def riwayat(username):
         input("\nTekan Enter untuk kembali...")
         return
 
-    # Urutkan berdasarkan tanggal (jika kolom tanggal berformat DD-MM-YYYY)
+    # Urutkan berdasarkan tanggal 
     try:
         user_history['TanggalBeli'] = pd.to_datetime(user_history['TanggalBeli'], format='%d-%m-%Y')
         user_history = user_history.sort_values(by='TanggalBeli', ascending=False)

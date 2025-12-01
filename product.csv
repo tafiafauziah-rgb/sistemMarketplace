@@ -1,7 +1,7 @@
 id,NamaProduk,Kategori,Harga,Stok,Subsidi
 1,Tumbuhprima,Bibit,50000,0,Ya
-2,Agroseed,Bibit,50000,90,Tidak
-3,Greenstart,Bibit,70000,90,Tidak
+2,Agroseed,Bibit,50000,89,Tidak
+3,Greenstart,Bibit,70000,80,Tidak
 4,Suburjaya,Bibit,90000,100,Tidak
 5,Freshgrow,Bibit,75000,100,Ya
 6,Primaseed,Bibit,50000,120,Tidak
