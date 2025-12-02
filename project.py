@@ -271,7 +271,7 @@ def lihat_produk():
             print("Belum ada produk.")
             df = pd.DataFrame(columns=namaColumn) #buat buka dataframe kolomnya dr variabl kolum
             df = df.reset_index(drop=True) #untuk mengurutkan indeks 
-            df.to_csv(file_product)
+            df.to_csv(file_product) #
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
             input("Enter untuk kembali...")
             break
@@ -456,12 +456,12 @@ def laporanadmin():
                 input("\nTekan Enter...")
                 break
             df['TanggalBeli'] = pd.to_datetime(df['TanggalBeli'], format= '%d-%m-%Y')
-            total_pendapatan = df['HargaTotal'].sum()
+            total_pendapatan = df['HargaTotal'].sum() #menjumlahkan harga total 
             df['TanggalBeli'] = pd.to_datetime(df['TanggalBeli']).dt.strftime('%d-%m-%Y')
 
-            print("\nTransaksi Harian:".center(50))
+            print("\nTransaksi Harian:".center(50)) #buat ditaro ditengah 
             print(tabulate(df, headers="keys", tablefmt="fancy_grid",showindex=False))
-            print(f"Total Pendapatan: Rp {total_pendapatan:,}")
+            print(f"Total Pendapatan: Rp {total_pendapatan:,}") #buat dijadiin ratusan, ribuan 
 
             input("\nTekan Enter...")
             return
@@ -509,14 +509,14 @@ def cariProduct():
         namaColumn = 'id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'
         if not os.path.exists(data_product):
             print("Belum ada pengguna.")
-            df = pd.DataFrame(columns=namaColumn) #membuat formulir kosong dengan judul kolom yang sudah ditentukan, siap diisi data nanti. 
-            df.to_csv(data_product)
-            print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
-            input("\nTekan Enter...")
+            # df = pd.DataFrame(data_product,columns=namaColumn) #membuat formulir kosong dengan judul kolom yang sudah ditentukan, siap diisi data nanti. 
+            # df.to_csv(data_product) 
+            # print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
+            input("\nTekan2 Enter...")
             break
         else:
             df = pd.read_csv(data_product)
-            # df = pd.DataFrame(columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi', 'Terjual'])
+            # df = pd.DataFrame(data_product,columns=['id', 'NamaProduk', 'Kategori', 'Harga', 'Stok', 'Subsidi'])
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
 
         try:
@@ -570,8 +570,8 @@ def tambah_ke_keranjang(username):
             os.system('cls')
             break
 
-        produk = df_produk[df_produk['id'] == id_produk].iloc[0]
-        if produk['Stok'] <= 0:
+        produk = df_produk[df_produk['id'] == id_produk].iloc[0] #loc itu ngambil brdsrkan locationnya bisa indks/kolom . #iloc indeks location (jd cm brdsrkan indeks) 
+        if produk['Stok'] <= 0: 
             print("Stok produk ini habis!")
             input("Tekan Enter...")
             return tambah_ke_keranjang(username)
@@ -579,7 +579,7 @@ def tambah_ke_keranjang(username):
 
         # Input jumlah
         try:
-            jumlah = int(input(f"Jumlah (Stok tersedia: {produk['Stok']}): "))
+            jumlah = int(input(f"Jumlah (Stok tersedia: {produk['Stok']}): ")) 
             if jumlah <= 0:
                 print("Jumlah minimal 1!")
                 input("Tekan Enter...")
@@ -596,8 +596,8 @@ def tambah_ke_keranjang(username):
         tanggal = input("Masukkan tanggal (DD-MM-YYYY) atau Enter untuk hari ini: ").strip()
         if not tanggal:
             tanggal = datetime.now().strftime("%d-%m-%Y") #buat formatnya
-
-        harga = df_produk.loc[df_produk['id'] == id_produk ,'Harga'].values[0] #gambil dr ID yg uda dipilih 
+            
+        harga = df_produk.loc[df_produk['id'] == id_produk ,'Harga'].values[0] #di cek id_produk itu sama dg df_produk bagian kolom id.  klo sama ambil nilai di kolom harga baris ke 0(== ini outputnya true or false)
         hargaTotal = harga * jumlah
 
         # Pastikan file keranjang ada
@@ -669,8 +669,8 @@ def hapus_dari_keranjang(username):
 
         # Hapus baris yang cocok
         df = df.astype(str) #cari perbedaan astype dan dstype #buat ngubah SEMUA data di DataFrame menjadi teks (string). 
-        hasil = df[
-            df['NamaProduk'].str.contains(nama_hapus, case=False)] #.str.contains = untuk memeriksa apakah ada kata yang mirip 
+        hasil = user_cart[
+            user_cart['NamaProduk'].str.contains(nama_hapus, case=False)] #.str.contains = untuk memeriksa apakah ada kata yang mirip 
 # tampilkan hasil pencarian
         if not hasil.empty:
             os.system('cls')
@@ -750,8 +750,7 @@ def pembayaran(username, pilih):
 
     # tambah kolom "No" untuk ditampilkan ke user (1,2,3,...)
     df_tampil = df_user.copy() #tmpt file yg uda di coppy
-    df_tampil["No"] = range(1, len(df_tampil) + 1) #buat ngitung baris trus ditmbh 1
-
+    df_tampil["No"] = range(1, len(df_tampil) + 1) #buat ngitung baris trus ditmbh 1 (ngambil dr variabel df_tampil kolom NO. di slicing 1 sampe panjangnya df_tampil +1) range buat ngurutin angka dari start smpe stop pada slicing 
     # tampilkan tabel keranjang user
     print("\nKeranjang Anda:")
     print(
@@ -839,7 +838,7 @@ def pembayaran(username, pilih):
         q= int(baris["Jumlah"]) #jumlh produk yg ingin dibeli
 
         if p in df_produk["id"].values:
-            stok_awal = df_produk.loc[df_produk["id"] == p, "Stok"].iloc[0]
+            stok_awal = df_produk.loc[df_produk["id"] == p, "Stok"].iloc[0] 
             stok_baru = stok_awal - q
             if stok_baru < 0: 
                 stok_baru = 0  # menghindari stok negatif
@@ -917,8 +916,8 @@ def riwayat(username):
     # Urutkan berdasarkan tanggal (jika kolom tanggal berformat DD-MM-YYYY)
     try:
         user_history['TanggalBeli'] = pd.to_datetime(user_history['TanggalBeli'], format='%d-%m-%Y')
-        user_history = user_history.sort_values(by='TanggalBeli', ascending=False)
-        user_history['TanggalBeli'] = user_history['TanggalBeli'].dt.strftime('%d-%m-%Y')
+        user_history = user_history.sort_values(by='TanggalBeli', ascending=False) #sort_values ini untuk mengurutkan tanggal dari variabel user_history. ascending jika true maka diurutkan dari lama ke baru jika false diurutkan dr baru ke lama (ditabelnya)
+        user_history['TanggalBeli'] = user_history['TanggalBeli'].dt.strftime('%d-%m-%Y') # dt.strftime('%d-%m-%Y') formatnya emg gini 
     except Exception as e:
         # Jika format tanggal error, tetap tampilkan tanpa urut
         pass

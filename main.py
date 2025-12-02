@@ -89,7 +89,7 @@ def register():
         elif p == '0': 
             return 
         else:
-            print("\nPilihan tidak valid! Masukkan 1, 2, atau 0.")
+            print("\nPilihan tidak valid! Masukkan 1 atau 0.")
             input("Tekan Enter untuk ulangi...")
 
 
@@ -158,15 +158,14 @@ def manajemen_pengguna():
             input("\nTekan Enter...")
             break
         
-        os.system('cls')
-        print(f"=== MANAJEMEN Pengguna ===")
+        print("=== MANAJEMEN Pengguna ===")
         print("1. Lihat Pengguna")
         print("2. Delete Pengguna")
         print("3. Keluar")
 
         p = input("Pilih menu: ")
-        if p == '1':
-            lihat_pengguna()
+        if p == '1': 
+            lihat_pengguna() 
         elif p == '2':   
             hapus_pengguna()
         elif p == '3':   
@@ -428,7 +427,7 @@ def hapus_produk():
             break
 
         df = df[df['id'] != id_p]
-        df = df.reset_index(drop=True)
+        df = df.reset_index(drop=True) 
         df.to_csv(file_produk, index=False)
 
         print("Produk berhasil dihapus!")
@@ -457,7 +456,7 @@ def laporanadmin():
             total_pendapatan = df['HargaTotal'].sum()
             df['TanggalBeli'] = pd.to_datetime(df['TanggalBeli']).dt.strftime('%d-%m-%Y')
 
-            print("\nTransaksi Harian:".center(50))
+            print("\nTransaksi Harian:")
             print(tabulate(df, headers="keys", tablefmt="fancy_grid",showindex=False))
             print(f"Total Pendapatan: Rp {total_pendapatan:,}")
 
@@ -631,69 +630,59 @@ def tambah_ke_keranjang(username):
 
 # ------------------------ HAPUS BARANG DARI KERANJANG ------------------------
 def hapus_dari_keranjang(username):
-    while True:
-        os.system('cls')
-        print("===== HAPUS DARI KERANJANG =====")
+    os.system('cls')
+    print("===== HAPUS DARI KERANJANG =====")
 
-        keranjang_file = 'keranjang.csv'
-        if not os.path.exists(keranjang_file):
-            print("Keranjang Anda kosong.")
-            input("Tekan Enter...")
-            break
+    keranjang_file = 'keranjang.csv'
+    if not os.path.exists(keranjang_file):
+        print("Keranjang Anda kosong.")
+        input("Tekan Enter...")
+        return
 
-        df = pd.read_csv(keranjang_file)
-        user_cart = df[df['username'] == username]
+    df = pd.read_csv(keranjang_file)
 
-        if user_cart.empty: #jika file nya gaada isi 
-            print("Keranjang Anda kosong.")
-            input("Tekan Enter...")
-            break
+    # Filter hanya milik user ini
+    user_cart = df[df['username'] == username].copy()
 
-        print("Isi Keranjang Anda:")
-        print(tabulate(user_cart[['NamaProduk', 'Jumlah','hargaTotal' ]], headers='keys', tablefmt='fancy_grid', showindex=False))
+    if user_cart.empty:
+        print("Keranjang Anda kosong.")
+        input("Tekan Enter...")
+        return
 
-        try:
-            nama_hapus = input("\nMasukkan Nama produk yang ingin dihapus: ").title()
-        except ValueError:
-            print("ID harus berupa angka!")
-            input("Tekan Enter...")
-            break
+    print("Isi Keranjang Anda:")
+    print(tabulate(user_cart[['NamaProduk', 'Jumlah', 'hargaTotal']], headers='keys', tablefmt='fancy_grid', showindex=False))
 
-        if nama_hapus not in user_cart['NamaProduk'].values:
-            print("Produk tidak ditemukan di keranjang Anda!")
-            input("Tekan Enter...")
-            break
+    nama_hapus = input("\nMasukkan Nama produk yang ingin dihapus: ").strip().title()
+    if not nama_hapus:
+        print("Nama tidak boleh kosong!")
+        input("Tekan Enter...")
+        return
+    
+    mask = user_cart['NamaProduk'].str.contains(nama_hapus, case=False, na=False)
+    hasil = user_cart[mask]
 
-        # Hapus baris yang cocok
-        df = df.astype(str) 
-        hasil = df[
-            df['NamaProduk'].str.contains(nama_hapus, case=False)] 
-# tampilkan hasil pencarian
-        if not hasil.empty:
-            os.system('cls')
-            print(tabulate(hasil[['NamaProduk', 'Jumlah','hargaTotal']], headers='keys', tablefmt='fancy_grid', showindex=False))
-        try:
-            pilih = input("\n Yakin ingin mengahapus? y/n: ").lower()
-            if pilih == 'y':
-                hasil = df[df['NamaProduk'].astype(str) != nama_hapus] 
-                hasil.reset_index(drop=True, inplace=True)  
-                hasil.to_csv(keranjang_file, index=False) 
-                print("Produk berhasil dihapus!")
-                input("Enter untuk kembali...")
-                return
-            
+    if hasil.empty:
+        print("Produk tidak ditemukan di keranjang Anda!")
+        input("Tekan Enter...")
+        return
 
-            elif pilih == 'n':
-                print('Produk batal dihapus')
-                return
-            else:
-                print("Masukkan huruf yang sesuai dengan pilihan yang ada")
-                return
-        except ValueError:
-            print("ERROR DI BAGIAN HAPUS DATA")
+    # Tampilkan hasil pencarian
+    os.system('cls')
+    print("Produk yang akan dihapus:")
+    print(tabulate(hasil[['NamaProduk', 'Jumlah', 'hargaTotal']], headers='keys', tablefmt='fancy_grid', showindex=False))
+
+    pilih = input("\nYakin ingin menghapus? (y/n): ").lower()
+    if pilih == 'y':
+
+        index_hapus = hasil.index  
         
-        print("Produk berhasil dihapus dari keranjang!")
-        break 
+        df = df.drop(index_hapus).reset_index(drop=True)
+        df.to_csv(keranjang_file, index=False)
+        print("Produk berhasil dihapus!")
+    else:
+        print("Penghapusan dibatalkan.")
+
+    input("Tekan Enter untuk kembali...")
 
 #-----------------------------METODE PEMBAYARAN---------------
 def metode_pembayaran(username):
